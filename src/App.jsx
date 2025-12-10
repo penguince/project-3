@@ -5,7 +5,8 @@ import {
   DigimonGrid,
   DigimonModal,
   LoadingSpinner,
-  ErrorMessage
+  ErrorMessage,
+  AudioPlayer
 } from './components';
 import './App.css';
 
@@ -217,6 +218,9 @@ function App() {
           </a>
         </p>
       </footer>
+
+      {/* Background Music Player */}
+      <AudioPlayer src="/Heroic Butterfly.mp3" />
     </div>
   );
 }
