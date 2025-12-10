@@ -10,7 +10,9 @@ import './DigimonModal.css';
  * @param {Object} props.digimon - The selected Digimon object
  * @param {Function} props.onClose - Handler to close the modal
  */
-function DigimonModal({ digimon, onClose }) {
+function DigimonModal({ digimon: initialDigimon, onClose }) {
+  // Current Digimon being displayed (can change when clicking related Digimon)
+  const [currentDigimon, setCurrentDigimon] = useState(initialDigimon);
   const [detailData, setDetailData] = useState(null);
   const [relatedDigimon, setRelatedDigimon] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -43,7 +45,7 @@ function DigimonModal({ digimon, onClose }) {
       try {
         // Fetch individual Digimon data by name
         const nameResponse = await fetch(
-          `https://digimon-api.vercel.app/api/digimon/name/${encodeURIComponent(digimon.name)}`
+          `https://digimon-api.vercel.app/api/digimon/name/${encodeURIComponent(currentDigimon.name)}`
         );
 
         if (!nameResponse.ok) {
@@ -51,18 +53,18 @@ function DigimonModal({ digimon, onClose }) {
         }
 
         const nameData = await nameResponse.json();
-        setDetailData(nameData[0] || digimon);
+        setDetailData(nameData[0] || currentDigimon);
 
         // Fetch related Digimon by level
         const levelResponse = await fetch(
-          `https://digimon-api.vercel.app/api/digimon/level/${encodeURIComponent(digimon.level)}`
+          `https://digimon-api.vercel.app/api/digimon/level/${encodeURIComponent(currentDigimon.level)}`
         );
 
         if (levelResponse.ok) {
           const levelData = await levelResponse.json();
           // Filter out current Digimon and get random 4 related ones
           const filtered = levelData
-            .filter((d) => d.name !== digimon.name)
+            .filter((d) => d.name !== currentDigimon.name)
             .sort(() => Math.random() - 0.5)
             .slice(0, 4);
           setRelatedDigimon(filtered);
@@ -76,7 +78,17 @@ function DigimonModal({ digimon, onClose }) {
     };
 
     fetchDigimonDetails();
-  }, [digimon]);
+  }, [currentDigimon]);
+
+  // Handle clicking on a related Digimon
+  const handleRelatedClick = (relatedMon) => {
+    setCurrentDigimon(relatedMon);
+    // Scroll modal content to top
+    const modalContent = document.querySelector('.modal-content');
+    if (modalContent) {
+      modalContent.scrollTop = 0;
+    }
+  };
 
   // Get level description
   const getLevelDescription = (level) => {
@@ -125,23 +137,23 @@ function DigimonModal({ digimon, onClose }) {
               <div className="modal-image-section">
                 <div className="modal-image-container">
                   <img
-                    src={detailData?.img || digimon.img}
-                    alt={digimon.name}
+                    src={detailData?.img || currentDigimon.img}
+                    alt={currentDigimon.name}
                     className="modal-image"
                   />
                 </div>
-                <div className={`modal-level-badge level-${digimon.level.toLowerCase().replace(' ', '-')}`}>
-                  {digimon.level}
+                <div className={`modal-level-badge level-${currentDigimon.level.toLowerCase().replace(' ', '-')}`}>
+                  {currentDigimon.level}
                 </div>
               </div>
 
               <div className="modal-info-section">
-                <h2 className="modal-title">{digimon.name}</h2>
+                <h2 className="modal-title">{currentDigimon.name}</h2>
                 
                 <div className="modal-stats">
                   <div className="stat-item">
                     <span className="stat-label">Level</span>
-                    <span className="stat-value">{digimon.level}</span>
+                    <span className="stat-value">{currentDigimon.level}</span>
                   </div>
                   <div className="stat-item">
                     <span className="stat-label">Type</span>
@@ -151,13 +163,13 @@ function DigimonModal({ digimon, onClose }) {
 
                 <div className="modal-description">
                   <h3>About this Level</h3>
-                  <p>{getLevelDescription(digimon.level)}</p>
+                  <p>{getLevelDescription(currentDigimon.level)}</p>
                 </div>
 
                 <div className="modal-api-info">
                   <h3>API Endpoint</h3>
                   <code className="api-endpoint">
-                    /api/digimon/name/{digimon.name.toLowerCase()}
+                    /api/digimon/name/{currentDigimon.name.toLowerCase()}
                   </code>
                 </div>
               </div>
@@ -166,10 +178,23 @@ function DigimonModal({ digimon, onClose }) {
             {/* Related Digimon Section */}
             {relatedDigimon.length > 0 && (
               <div className="modal-related">
-                <h3>Other {digimon.level} Level Digimon</h3>
+                <h3>Other {currentDigimon.level} Level Digimon</h3>
                 <div className="related-grid">
                   {relatedDigimon.map((related, index) => (
-                    <div key={`${related.name}-${index}`} className="related-card">
+                    <div 
+                      key={`${related.name}-${index}`} 
+                      className="related-card"
+                      onClick={() => handleRelatedClick(related)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          handleRelatedClick(related);
+                        }
+                      }}
+                      aria-label={`View ${related.name}`}
+                    >
                       <img src={related.img} alt={related.name} />
                       <span>{related.name}</span>
                     </div>
