@@ -1,0 +1,67 @@
+/* DigimonGrid Styles */
+.grid-container {
+  width: 100%;
+  padding: 20px 0;
+}
+
+.results-info {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #8a8aa0;
+  font-size: 1rem;
+}
+
+.results-info .highlight {
+  color: #667eea;
+  font-weight: 600;
+}
+
+.digimon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 25px;
+  padding: 10px;
+}
+
+/* No Results Styles */
+.no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  text-align: center;
+  color: #8a8aa0;
+}
+
+.no-results-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+.no-results h3 {
+  font-size: 1.5rem;
+  color: #b0b0c0;
+  margin-bottom: 10px;
+}
+
+.no-results p {
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .digimon-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .digimon-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+  }
+}

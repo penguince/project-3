@@ -1,0 +1,100 @@
+/* ErrorMessage Styles */
+.error-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  padding: 40px;
+  text-align: center;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.error-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  20%, 60% {
+    transform: translateX(-10px);
+  }
+  40%, 80% {
+    transform: translateX(10px);
+  }
+}
+
+.error-title {
+  font-size: 1.8rem;
+  color: #ff6b6b;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.error-message {
+  font-size: 1.1rem;
+  color: #b0b0c0;
+  margin-bottom: 25px;
+  padding: 15px 25px;
+  background: rgba(255, 107, 107, 0.1);
+  border-radius: 10px;
+  border-left: 4px solid #ff6b6b;
+}
+
+.error-suggestions {
+  text-align: left;
+  color: #8a8aa0;
+  margin-bottom: 30px;
+}
+
+.error-suggestions p {
+  font-weight: 600;
+  color: #b0b0c0;
+  margin-bottom: 10px;
+}
+
+.error-suggestions ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.error-suggestions li {
+  padding: 8px 0;
+  padding-left: 25px;
+  position: relative;
+}
+
+.error-suggestions li::before {
+  content: '•';
+  position: absolute;
+  left: 10px;
+  color: #667eea;
+}
+
+.retry-button {
+  padding: 14px 35px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.retry-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.retry-button:active {
+  transform: translateY(-1px);
+}
